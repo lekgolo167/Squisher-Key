@@ -1,32 +1,35 @@
+import random
 
 message = 'Hello World'
-maskList = [0, 1, 2, 4, 8, 16, 32, 64]
-bitPosition = [0, 8, 16, 24, 32, 39, 47, 54, 61, 68, 75, 81, 87, 93, 98, 103, 107, 111, 115, 118, 121, 123, 125, 126, 127]
+maskList = [1, 2, 4, 8, 16, 32, 64]
+bitPosition = [0, 6, 13, 22, 27, 28, 31, 1, 4, 8, 17, 25, 26, 30, 3, 7, 8, 9, 15, 24, 26]
+encoded = []
+temp = [2554339393, 1174536466, 83919752]
 charCount = 0
+offset = 0
 while charCount < len(message):
     char = message[charCount]
     print(char)
     print("{0:b}".format(ord(char)))
-    encoded = 0
-    maskCount = 0
-    bitCount = 0
-    while bitCount < len(bitPosition) and charCount < len(message):
-        if maskCount > 7:
-            maskCount = 0
-            charCount += 1
-            print(char)
-            print("{0:b}".format(ord(char)))
-            if charCount < len(message):
-                char = message[charCount]
-            else:
-                break
+    encoded.append(random.randint(0, 2140000000))
 
-        if ord(char) & maskList[maskCount]:
-            encoded |= 1 << bitPosition[bitCount]
+    if offset > 14:
+        offset = 0
+
+    for i in range(0, 7):
+        if ord(char) & maskList[i]:
+            encoded[charCount] |= 1 << bitPosition[i+offset]
         else:
-            encoded |= 0 << bitPosition[bitCount]
+            encoded[charCount] &= ~(1 << bitPosition[i+offset])
 
-        maskCount += 1
-        bitCount += 1
+    print("{0:032b}".format(encoded[charCount]))
+    if offset < 7:
+        print("{0:032b}".format(temp[0]))
+    elif offset < 14:
+        print("{0:032b}".format(temp[1]))
+    else:
+        print("{0:032b}".format(temp[2]))
+    charCount += 1
+    offset += 7
 
-    print("{0:b}".format(encoded))
+print(encoded)
