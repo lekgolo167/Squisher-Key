@@ -9,18 +9,24 @@ while charCount < len(message):
     print("{0:b}".format(ord(char)))
     encoded = 0
     maskCount = 0
-
-    for i in range(0, len(bitPosition)):
+    bitCount = 0
+    while bitCount < len(bitPosition) and charCount < len(message):
         if maskCount > 7:
             maskCount = 0
             charCount += 1
-            char = message[charCount]
+            print(char)
+            print("{0:b}".format(ord(char)))
+            if charCount < len(message):
+                char = message[charCount]
+            else:
+                break
 
         if ord(char) & maskList[maskCount]:
-            encoded |= 1 << maskCount
+            encoded |= 1 << bitPosition[bitCount]
         else:
-            encoded |= 0 << maskCount
+            encoded |= 0 << bitPosition[bitCount]
 
         maskCount += 1
+        bitCount += 1
 
     print("{0:b}".format(encoded))
